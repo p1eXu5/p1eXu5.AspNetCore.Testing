@@ -1,0 +1,51 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{BAE9E8AD-5844-4DE6-AA33-A3F4F9882B66}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "p1eXu5.AspNetCore.Testing", "src\p1eXu5.AspNetCore.Testing\p1eXu5.AspNetCore.Testing.csproj", "{2EE38579-C049-4BB3-AD30-F2DB9116ECF3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "p1eXu5.AspNetCore.Testing.Logging", "src\p1eXu5.AspNetCore.Testing.Logging\p1eXu5.AspNetCore.Testing.Logging.csproj", "{D6AF8569-D22E-4170-AC63-E7C8132FA8F5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "root", "root", "{22CCE171-3BCF-49EE-A859-41C1B16CBAB0}"
+	ProjectSection(SolutionItems) = preProject
+		pack.cmd = pack.cmd
+		pack.fsx = pack.fsx
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "p1eXu5.AspNetCore.Testing.MockRepository", "src\p1eXu5.AspNetCore.Testing.MockRepository\p1eXu5.AspNetCore.Testing.MockRepository.csproj", "{9FAEC9BF-570A-46A5-A4FB-5D775580A161}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2EE38579-C049-4BB3-AD30-F2DB9116ECF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2EE38579-C049-4BB3-AD30-F2DB9116ECF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2EE38579-C049-4BB3-AD30-F2DB9116ECF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2EE38579-C049-4BB3-AD30-F2DB9116ECF3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6AF8569-D22E-4170-AC63-E7C8132FA8F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6AF8569-D22E-4170-AC63-E7C8132FA8F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6AF8569-D22E-4170-AC63-E7C8132FA8F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6AF8569-D22E-4170-AC63-E7C8132FA8F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9FAEC9BF-570A-46A5-A4FB-5D775580A161}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9FAEC9BF-570A-46A5-A4FB-5D775580A161}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9FAEC9BF-570A-46A5-A4FB-5D775580A161}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9FAEC9BF-570A-46A5-A4FB-5D775580A161}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2EE38579-C049-4BB3-AD30-F2DB9116ECF3} = {BAE9E8AD-5844-4DE6-AA33-A3F4F9882B66}
+		{D6AF8569-D22E-4170-AC63-E7C8132FA8F5} = {BAE9E8AD-5844-4DE6-AA33-A3F4F9882B66}
+		{9FAEC9BF-570A-46A5-A4FB-5D775580A161} = {BAE9E8AD-5844-4DE6-AA33-A3F4F9882B66}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A439FF3F-1ABB-47D1-9E30-C681638C8385}
+	EndGlobalSection
+EndGlobal
