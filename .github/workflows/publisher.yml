@@ -11,7 +11,8 @@ jobs:
   # when a job name is not provided
   publish:     
     runs-on: ubuntu-latest
-    
+    permissions:
+        packages: write
     steps:
     # Checks out a copy of your repository on the ubuntu-latest machine
     - name: Checkout code
