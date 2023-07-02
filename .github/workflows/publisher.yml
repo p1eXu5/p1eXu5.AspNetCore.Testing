@@ -30,10 +30,16 @@ jobs:
       run: dotnet build --configuration Release --no-restore
 
     - name: Pack
-      run: dotnet pack --no-build --configuration Release src/p1eXu5.AspNetCore.Testing/p1eXu5.AspNetCore.Testing.csproj --output .
+      run: |
+        dotnet pack --no-build --configuration Release src/p1eXu5.AspNetCore.Testing.MockRepository/p1eXu5.AspNetCore.Testing.MockRepository.csproj --output .
+        dotnet pack --no-build --configuration Release src/p1eXu5.AspNetCore.Testing.Logging/p1eXu5.AspNetCore.Testing.Logging.csproj --output .
+        dotnet pack --no-build --configuration Release src/p1eXu5.AspNetCore.Testing/p1eXu5.AspNetCore.Testing.csproj --output .
       
     - name: Prep packages
       run: dotnet nuget add source --username p1eXu5 --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/p1eXu5/index.json"
 
     - name: Publish to GitHub packages
-      run: dotnet nuget push p1eXu5.AspNetCore.Testing.*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source "github" --skip-duplicate
+      run: |
+        dotnet nuget push p1eXu5.AspNetCore.Testing.MockRepository.1*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source "github" --skip-duplicate
+        dotnet nuget push p1eXu5.AspNetCore.Testing.Logging.1*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source "github" --skip-duplicate
+        dotnet nuget push p1eXu5.AspNetCore.Testing.1*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source "github" --skip-duplicate
