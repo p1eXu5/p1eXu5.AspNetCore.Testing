@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
@@ -12,7 +12,7 @@
     <Description>ASP.NET Core testing helpers.</Description>
     <Copyright>2023 Vladimir Likhatskiy</Copyright>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <RepositoryUrl></RepositoryUrl>
+    <RepositoryUrl>https://github.com/p1eXu5/p1eXu5.AspNetCore.Testing</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>asp.net;core;c#;testing;mock;di;logging;.net7</PackageTags>
     
