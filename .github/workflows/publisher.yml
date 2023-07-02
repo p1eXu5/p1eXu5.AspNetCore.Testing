@@ -34,4 +34,4 @@ jobs:
     - name: Push p1eXu5.AspNetCore.Testing Nuget
       run: |
          dotnet nuget add source --username p1eXu5 --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/p1eXu5/index.json"
-         dotnet nuget push p1eXu5.AspNetCore.Testing.*.nupkg --source "github" --skip-duplicate
+         dotnet nuget push p1eXu5.AspNetCore.Testing.*.nupkg --source "github" --api-key ${{ secrets.GITHUB_TOKEN }} --skip-duplicate
