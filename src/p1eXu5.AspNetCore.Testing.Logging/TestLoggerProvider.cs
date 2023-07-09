@@ -7,11 +7,13 @@ public class TestLoggerProvider : ILoggerProvider
 {
     private readonly Func<string, LogLevel, bool>? _filter;
     private readonly ITestContext _testContext;
+    private readonly LogOut _logOut;
 
-    public TestLoggerProvider(ITestContext testContext)
+    public TestLoggerProvider(ITestContext testContext, LogOut logOut)
     {
         _filter = null;
         _testContext = testContext;
+        _logOut = logOut;
     }
 
     public ILogger CreateLogger(string name)
