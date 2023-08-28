@@ -12,18 +12,18 @@ public enum LogOut
 
 public class TestLogger : ILogger
 {
-    private readonly ITestContext _testContext;
+    private readonly ITestContextWriters _testContext;
     private readonly Func<string, LogLevel, bool>? _filter;
     private readonly string _name;
     private readonly LogOut _logOut;
 
-    public TestLogger(ITestContext testContext, string name, LogOut logOut = LogOut.Progress)
+    public TestLogger(ITestContextWriters testContext, string name, LogOut logOut = LogOut.Progress)
         : this(testContext, name, filter: null)
     {
         _logOut = logOut;
     }
 
-    public TestLogger(ITestContext testContext, string name, Func<string, LogLevel, bool>? filter, LogOut logOut = LogOut.Progress)
+    public TestLogger(ITestContextWriters testContext, string name, Func<string, LogLevel, bool>? filter, LogOut logOut = LogOut.Progress)
     {
         _name = string.IsNullOrEmpty(name) ? nameof(TestLogger) : name;
         _testContext = testContext;
@@ -35,13 +35,6 @@ public class TestLogger : ILogger
          where TState : notnull
     {
         return NullDisposable.Instance;
-    }
-
-    public bool IsEnabled(LogLevel logLevel)
-    {
-        var runningInNUnitContext = _testContext.Progress is not null;
-        return RunningInNUnitContext() && logLevel != LogLevel.None
-        && (_filter is null || _filter(_name, logLevel));
     }
 
     public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
@@ -63,7 +56,7 @@ public class TestLogger : ILogger
             return;
         }
 
-        message = $"{LogLevelShort(logLevel)}: {_name}{Environment.NewLine}       {message}";
+        message = $"[{DateTime.Now:HH:mm:ss:fff} {LogLevelShort(logLevel)}]: {_name}{Environment.NewLine}       {message}";
 
         if (exception != null)
         {
@@ -73,9 +66,15 @@ public class TestLogger : ILogger
         WriteMessage(message);
     }
 
+    public bool IsEnabled(LogLevel logLevel)
+    {
+        return RunningInNUnitContext() && logLevel != LogLevel.None
+        && (_filter is null || _filter(_name, logLevel));
+    }
+
     private bool RunningInNUnitContext()
     {
-        return _testContext.Progress is not null;
+        return _testContext.Progress is not null || _testContext.Out is not null;
     }
 
     private void WriteMessage(string message)
@@ -114,7 +113,7 @@ public class TestLogger : ILogger
 
 public class TestLogger<T> : TestLogger, ILogger<T>
 {
-    public TestLogger(ITestContext testContext, LogOut logOut = LogOut.Progress)
+    public TestLogger(ITestContextWriters testContext, LogOut logOut = LogOut.Progress)
         : base(testContext, typeof(T).Name, logOut)
     {
     }

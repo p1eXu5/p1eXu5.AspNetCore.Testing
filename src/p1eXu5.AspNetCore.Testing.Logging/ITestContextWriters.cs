@@ -1,6 +1,6 @@
 ﻿namespace p1eXu5.AspNetCore.Testing.Logging;
 
-public interface ITestContext
+public interface ITestContextWriters
 {
     TextWriter? Progress { get; }
 

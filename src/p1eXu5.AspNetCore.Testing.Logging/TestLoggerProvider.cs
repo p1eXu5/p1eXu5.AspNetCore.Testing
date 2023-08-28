@@ -6,10 +6,10 @@ namespace p1eXu5.AspNetCore.Testing.Logging;
 public class TestLoggerProvider : ILoggerProvider
 {
     private readonly Func<string, LogLevel, bool>? _filter;
-    private readonly ITestContext _testContext;
+    private readonly ITestContextWriters _testContext;
     private readonly LogOut _logOut;
 
-    public TestLoggerProvider(ITestContext testContext, LogOut logOut)
+    public TestLoggerProvider(ITestContextWriters testContext, LogOut logOut)
     {
         _filter = null;
         _testContext = testContext;
@@ -18,7 +18,7 @@ public class TestLoggerProvider : ILoggerProvider
 
     public ILogger CreateLogger(string name)
     {
-        return new TestLogger(_testContext, name, _filter);
+        return new TestLogger(_testContext, name, _filter, _logOut);
     }
 
     public void Dispose()

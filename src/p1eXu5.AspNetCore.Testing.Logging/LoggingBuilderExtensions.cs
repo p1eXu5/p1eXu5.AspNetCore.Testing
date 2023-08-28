@@ -8,7 +8,7 @@ namespace Microsoft.Extensions.Logging;
 
 public static class LoggingBuilderExtensions
 {
-    public static ILoggingBuilder AddTestLogger(this ILoggingBuilder builder, ITestContext testContext, LogOut logOut)
+    public static ILoggingBuilder AddTestLogger(this ILoggingBuilder builder, ITestContextWriters testContext, LogOut logOut)
     {
         builder.Services.TryAddEnumerable(
             ServiceDescriptor.Singleton<ILoggerProvider, TestLoggerProvider>(_ =>
