@@ -16,6 +16,11 @@ public class TestLoggerProvider : ILoggerProvider
         _logOut = logOut;
     }
 
+    public TestLoggerProvider(ITestContextWriters testContext)
+        : this(testContext, LogOut.Out | LogOut.Progress)
+    {
+    }
+
     public ILogger CreateLogger(string name)
     {
         return new TestLogger(_testContext, name, _filter, _logOut);
@@ -23,5 +28,12 @@ public class TestLoggerProvider : ILoggerProvider
 
     public void Dispose()
     {
+    }
+
+    public static ILogger CreateLogger(TextWriter? progress, TextWriter? @out, string name)
+    {
+        return
+            new TestLoggerProvider(new TestContextWriters { Progress = progress, Out = @out })
+                .CreateLogger(name);
     }
 }
