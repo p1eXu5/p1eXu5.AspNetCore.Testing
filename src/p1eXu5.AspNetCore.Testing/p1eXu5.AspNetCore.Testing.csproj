@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFrameworks>net7.0;net8.0</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 
-    <Version>1.0.3</Version>
+    <Version>1.0.4</Version>
     <AssemblyVersion>1.0</AssemblyVersion>
-    <FileVersion>1.0.3.0</FileVersion>
+    <FileVersion>1.0.4.0</FileVersion>
     <Authors>p1eXu5</Authors>
     <Description>ASP.NET Core testing helpers.</Description>
     <Copyright>2023 Vladimir Likhatskiy</Copyright>

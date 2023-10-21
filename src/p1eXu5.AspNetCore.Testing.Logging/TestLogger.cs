@@ -14,18 +14,24 @@ public class TestLogger : ILogger
 {
     private readonly ITestContextWriters _testContext;
     private readonly Func<string, LogLevel, bool>? _filter;
-    private readonly string _name;
+    private readonly string _categoryName;
     private readonly LogOut _logOut;
 
-    public TestLogger(ITestContextWriters testContext, string name, LogOut logOut = LogOut.Progress)
-        : this(testContext, name, filter: null)
+    /// <summary>
+    /// Initializes a new instance of the <see cref="TestLogger"/> class.
+    /// </summary>
+    /// <param name="testContextWriters">Implementation of <see cref="ITestContextWriters"/>.<br/>Instance of <see cref="TestContextWriters"/> can be used.</param>
+    /// <param name="categoryName"></param>
+    /// <param name="logOut"></param>
+    public TestLogger(ITestContextWriters testContextWriters, string categoryName, LogOut logOut = LogOut.Progress)
+        : this(testContextWriters, categoryName, filter: null)
     {
         _logOut = logOut;
     }
 
     public TestLogger(ITestContextWriters testContext, string name, Func<string, LogLevel, bool>? filter, LogOut logOut = LogOut.Progress)
     {
-        _name = string.IsNullOrEmpty(name) ? nameof(TestLogger) : name;
+        _categoryName = string.IsNullOrEmpty(name) ? nameof(TestLogger) : name;
         _testContext = testContext;
         _filter = filter;
         _logOut = logOut;
@@ -56,7 +62,7 @@ public class TestLogger : ILogger
             return;
         }
 
-        message = $"[{DateTime.Now:HH:mm:ss:fff} {LogLevelShort(logLevel)}]: {_name}{Environment.NewLine}       {message}";
+        message = $"[{DateTime.Now:HH:mm:ss:fff} {LogLevelShort(logLevel)}]: {_categoryName}{Environment.NewLine}       {message}";
 
         if (exception != null)
         {
@@ -69,7 +75,7 @@ public class TestLogger : ILogger
     public bool IsEnabled(LogLevel logLevel)
     {
         return RunningInNUnitContext() && logLevel != LogLevel.None
-        && (_filter is null || _filter(_name, logLevel));
+        && (_filter is null || _filter(_categoryName, logLevel));
     }
 
     private bool RunningInNUnitContext()
