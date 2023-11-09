@@ -6,8 +6,9 @@ namespace p1eXu5.AspNetCore.Testing.Logging;
 public enum LogOut
 {
     NotSet = 0,
-    Progress = 0x0001,
-    Out = 0x0010,
+    Progress = 0b0001,
+    Out      = 0b0010,
+    All      = 0b0011,
 }
 
 public class TestLogger : ILogger
@@ -22,27 +23,49 @@ public class TestLogger : ILogger
     /// </summary>
     /// <param name="testContextWriters">Implementation of <see cref="ITestContextWriters"/>.<br/>Instance of <see cref="TestContextWriters"/> can be used.</param>
     /// <param name="categoryName"></param>
-    /// <param name="logOut"></param>
+    /// <param name="logOut">Where to write logs.</param>
     public TestLogger(ITestContextWriters testContextWriters, string categoryName, LogOut logOut = LogOut.Progress)
         : this(testContextWriters, categoryName, filter: null)
     {
         _logOut = logOut;
     }
 
-    public TestLogger(ITestContextWriters testContext, string name, Func<string, LogLevel, bool>? filter, LogOut logOut = LogOut.Progress)
+    /// <summary>
+    /// Initializes a new instance of the <see cref="TestLogger"/> class.
+    /// </summary>
+    /// <param name="testContextWriters">Implementation of <see cref="ITestContextWriters"/>.<br/>Instance of <see cref="TestContextWriters"/> can be used.</param>
+    /// <param name="name"></param>
+    /// <param name="filter"></param>
+    /// <param name="logOut">Where to write logs.</param>
+    public TestLogger(ITestContextWriters testContextWriters, string name, Func<string, LogLevel, bool>? filter, LogOut logOut = LogOut.Progress)
     {
         _categoryName = string.IsNullOrEmpty(name) ? nameof(TestLogger) : name;
-        _testContext = testContext;
+        _testContext = testContextWriters;
         _filter = filter;
         _logOut = logOut;
     }
 
+    /// <summary>
+    /// Returns <see cref="NullDisposable.Instance"/>.
+    /// </summary>
+    /// <typeparam name="TState"></typeparam>
+    /// <param name="state"></param>
+    /// <returns></returns>
     public IDisposable BeginScope<TState>(TState state)
          where TState : notnull
     {
         return NullDisposable.Instance;
     }
 
+    /// <summary>
+    /// </summary>
+    /// <typeparam name="TState"></typeparam>
+    /// <param name="logLevel"></param>
+    /// <param name="eventId"></param>
+    /// <param name="state"></param>
+    /// <param name="exception"></param>
+    /// <param name="formatter"></param>
+    /// <exception cref="ArgumentNullException"></exception>
     public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
     {
         if (!IsEnabled(logLevel))
@@ -56,11 +79,6 @@ public class TestLogger : ILogger
         }
 
         var message = formatter(state, exception);
-
-        if (string.IsNullOrEmpty(message))
-        {
-            return;
-        }
 
         message = $"[{DateTime.Now:HH:mm:ss:fff} {LogLevelShort(logLevel)}]: {_categoryName}{Environment.NewLine}       {message}";
 
