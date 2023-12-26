@@ -12,7 +12,7 @@ let private loggerFactory =
     { new ILoggerFactory with
         member _.AddProvider(_: ILoggerProvider) = ()
         member _.CreateLogger(categoryName: string) =
-            TestLogger(TestContextWriters(Progress = TestContext.Progress, Out = TestContext.Out), categoryName)
+            TestLogger(TestContextWriters(Progress = TestContext.Progress, Out = TestContext.Out), categoryName, LogOut.All)
             :> ILogger
         member _.Dispose() = ()
     }
