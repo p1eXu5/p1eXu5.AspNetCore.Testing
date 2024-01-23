@@ -12,6 +12,7 @@
 public interface ITestContextWriters
 {
     /// <summary>
+    /// Output console. <br/>
     /// If NUnit is used writers are may be different in setup and test methods.<br/>
     /// The value may need to be reassigned.
     /// </summary>

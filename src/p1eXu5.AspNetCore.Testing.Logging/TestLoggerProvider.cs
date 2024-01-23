@@ -29,11 +29,4 @@ public class TestLoggerProvider : ILoggerProvider
     public void Dispose()
     {
     }
-
-    public static ILogger CreateLogger(TextWriter? progress, TextWriter? @out, string name)
-    {
-        return
-            new TestLoggerProvider(new TestContextWriters { Progress = progress, Out = @out })
-                .CreateLogger(name);
-    }
 }

@@ -19,6 +19,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "root", "root", "{22CCE171-3
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "p1eXu5.AspNetCore.Testing.MockRepository", "src\p1eXu5.AspNetCore.Testing.MockRepository\p1eXu5.AspNetCore.Testing.MockRepository.csproj", "{9FAEC9BF-570A-46A5-A4FB-5D775580A161}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "p1eXu5.AspNetCore.Testing.Serilog", "src\p1eXu5.AspNetCore.Testing.Serilog\p1eXu5.AspNetCore.Testing.Serilog.csproj", "{C4F5CCE5-5458-4FF0-A206-583690FF122B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,10 @@ Global
 		{9FAEC9BF-570A-46A5-A4FB-5D775580A161}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9FAEC9BF-570A-46A5-A4FB-5D775580A161}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9FAEC9BF-570A-46A5-A4FB-5D775580A161}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4F5CCE5-5458-4FF0-A206-583690FF122B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4F5CCE5-5458-4FF0-A206-583690FF122B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4F5CCE5-5458-4FF0-A206-583690FF122B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4F5CCE5-5458-4FF0-A206-583690FF122B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -45,6 +51,7 @@ Global
 		{2EE38579-C049-4BB3-AD30-F2DB9116ECF3} = {BAE9E8AD-5844-4DE6-AA33-A3F4F9882B66}
 		{D6AF8569-D22E-4170-AC63-E7C8132FA8F5} = {BAE9E8AD-5844-4DE6-AA33-A3F4F9882B66}
 		{9FAEC9BF-570A-46A5-A4FB-5D775580A161} = {BAE9E8AD-5844-4DE6-AA33-A3F4F9882B66}
+		{C4F5CCE5-5458-4FF0-A206-583690FF122B} = {BAE9E8AD-5844-4DE6-AA33-A3F4F9882B66}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A439FF3F-1ABB-47D1-9E30-C681638C8385}

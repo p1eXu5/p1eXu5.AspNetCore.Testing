@@ -80,7 +80,7 @@ public class TestLogger : ILogger
 
         var message = formatter(state, exception);
 
-        message = $"[{DateTime.Now:HH:mm:ss:fff} {LogLevelShort(logLevel)}]: {_categoryName}{Environment.NewLine}       {message}";
+        message = $"{DateTime.Now:HH:mm:ss:fff} [{LogLevelShort(logLevel, 3)}] {_categoryName}{Environment.NewLine}    {message}{Environment.NewLine}";
 
         if (exception != null)
         {
@@ -114,15 +114,49 @@ public class TestLogger : ILogger
         }
     }
 
-    private static string LogLevelShort(LogLevel logLevel) => logLevel switch
+    private static string LogLevelShort(LogLevel logLevel, int length = -1) => (logLevel) switch
     {
-        LogLevel.Trace => "trace",
-        LogLevel.Debug => "debug",
-        LogLevel.Information => "info",
-        LogLevel.Warning => "warn",
-        LogLevel.Error => "error",
-        LogLevel.Critical => "critical",
-        _ => "none",
+        LogLevel.Trace =>
+            length switch {
+                3 => "VRB",
+                _ => "TRACE",
+            },
+        LogLevel.Debug =>
+            length switch
+            {
+                3 => "DBG",
+                _ => "DEBUG",
+            },
+        LogLevel.Information =>
+            length switch
+            {
+                3 => "INF",
+                _ => "INFO",
+            },
+        LogLevel.Warning =>
+            length switch
+            {
+                3 => "WRN",
+                _ => "WARN",
+            },
+        LogLevel.Error =>
+            length switch
+            {
+                3 => "ERR",
+                _ => "ERROR",
+            },
+        LogLevel.Critical =>
+            length switch
+            {
+                3 => "CRT",
+                _ => "CRITICAL",
+            },
+        _ =>
+            length switch
+            {
+                3 => "???",
+                _ => "???",
+            },
     };
 
     private sealed class NullDisposable : IDisposable

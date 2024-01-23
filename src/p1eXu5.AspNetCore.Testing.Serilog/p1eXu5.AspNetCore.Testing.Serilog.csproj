@@ -4,7 +4,7 @@
     <TargetFrameworks>net7.0;net8.0</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    
+
     <Version>1.0.7</Version>
     <AssemblyVersion>1.0</AssemblyVersion>
     <FileVersion>1.0.7.0</FileVersion>
@@ -13,13 +13,18 @@
     <Copyright>2023 Vladimir Likhatskiy</Copyright>
     <NeutralLanguage>en-US</NeutralLanguage>
     <RepositoryUrl>https://github.com/p1eXu5/p1eXu5.AspNetCore.Testing</RepositoryUrl>
-    <PackageProjectUrl>https://github.com/p1eXu5/p1eXu5.AspNetCore.Testing/index.html</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageTags>asp.net;core;c#;testing;mock;di;repository;.net7</PackageTags>
+    <PackageTags>asp.net;core;c#;testing;mock;di;logging;.net7</PackageTags>
+
+    <AnalysisMode>all-latest</AnalysisMode>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+    <ProjectReference Include="..\p1eXu5.AspNetCore.Testing.Logging\p1eXu5.AspNetCore.Testing.Logging.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Serilog" Version="3.1.1" />
   </ItemGroup>
 
 </Project>
