@@ -1,4 +1,4 @@
-﻿namespace p1eXu5.AspNetCore.MockRepository;
+﻿namespace p1eXu5.AspNetCore.Testing.MockRepository;
 
 
 /// <summary>
@@ -6,11 +6,11 @@
 /// to obtain real service.
 /// </summary>
 /// <typeparam name="TService"></typeparam>
-internal interface IServiceScraper<TService>
+internal interface IOriginalServiceContainer<TService>
 {
     /// <inheritdoc cref="MakeGenericServiceProxyType(Type)"/>
     internal static Type MakeGenericType()
     {
-        return ServiceScrapperTypeFactory.MakeGenericFrom(typeof(TService));
+        return OriginalServiceContainerTypeFactory.MakeGenericFrom(typeof(TService));
     }
 }

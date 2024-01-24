@@ -1,8 +1,10 @@
-﻿namespace p1eXu5.AspNetCore.MockRepository;
+﻿namespace p1eXu5.AspNetCore.Testing.MockRepository;
 
 public interface ITestLogWriter
 {
-    void WriteLine(string message);
-    void WriteLine(string message, object arg);
-    void WriteLine(string message, object arg, Exception arg2);
+    void LogDebug(string message);
+
+    void LogDebug(string message, object arg);
+
+    void LogError(Exception exception, string message, object arg);
 }

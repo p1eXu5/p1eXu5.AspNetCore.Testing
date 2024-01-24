@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace p1eXu5.AspNetCore.MockRepository;
+namespace p1eXu5.AspNetCore.Testing.MockRepository;
 
 /// <summary>
 /// Extension for <see cref="MockRepository"/> to work with Moq.
@@ -13,7 +13,7 @@ public sealed class QMockRepository : MockRepository
 
     public new object? Substitute<TService>()
     {
-        if (MockDecorators.TryGetValue(typeof(TService), out var decorator))
+        if (MockServiceProxyMap.TryGetValue(typeof(TService), out var decorator))
         {
             return decorator.Substitute;
         }
@@ -31,8 +31,8 @@ public sealed class QMockRepository : MockRepository
                 System.Reflection.BindingFlags.Instance
                 | System.Reflection.BindingFlags.Public
                 | System.Reflection.BindingFlags.GetField)
-            .FirstOrDefault(pi => 
-                pi.Name.Equals("Object", StringComparison.Ordinal) && pi.PropertyType != typeof(Object));
+            .FirstOrDefault(pi =>
+                pi.Name.Equals("Object", StringComparison.Ordinal) && pi.PropertyType != typeof(object));
 
         if (objectPropertyInfo is { })
         {
@@ -47,7 +47,7 @@ public sealed class QMockRepository : MockRepository
                                                  in ITestLogWriter testLogWriter)
     {
         QMockRepository mockRepository = new(testLogWriter);
-        AddServiceProxies(services, substitutedServiceTypes, testLogWriter, mockRepository);
+        BuildMockServiceProxies(services, substitutedServiceTypes, testLogWriter, mockRepository);
         return mockRepository;
     }
 }

@@ -2,11 +2,11 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace p1eXu5.AspNetCore.MockRepository;
+namespace p1eXu5.AspNetCore.Testing.MockRepository;
 
 public class MockRepository
 {
-    private ImmutableDictionary<Type, MockServiceProxy> _scrapperProxyMap = default!;
+    private ImmutableDictionary<Type, MockServiceProxy> _mockServiceProxyMap = default!;
     private readonly ITestLogWriter _testLogWriter;
 
 
@@ -16,7 +16,7 @@ public class MockRepository
     }
 
 
-    protected IReadOnlyDictionary<Type, MockServiceProxy> MockDecorators => _scrapperProxyMap;
+    protected IReadOnlyDictionary<Type, MockServiceProxy> MockServiceProxyMap => _mockServiceProxyMap;
 
     /// <summary>
     /// Invokes <see cref="MockServiceProxy.Resolve(IServiceProvider)"/>
@@ -24,11 +24,17 @@ public class MockRepository
     protected virtual Func<MockServiceProxy, IServiceProvider, object> Resolve { get; }
         = (mockServiceProxy, serviceProvider) => mockServiceProxy.Resolve(serviceProvider);
 
-
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MockRepository"/> class and built <see cref="MockServiceProxy"/> for the <paramref name="substitutedServiceTypes"/>.
+    /// </summary>
+    /// <param name="services"></param>
+    /// <param name="substitutedServiceTypes"></param>
+    /// <param name="testLogWriter"></param>
+    /// <returns></returns>
     public static MockRepository Initialize(in IServiceCollection services, in IReadOnlyCollection<IServiceType> substitutedServiceTypes, in ITestLogWriter testLogWriter)
     {
         MockRepository mockRepository = new(testLogWriter);
-        AddServiceProxies(services, substitutedServiceTypes, testLogWriter, mockRepository);
+        BuildMockServiceProxies(services, substitutedServiceTypes, testLogWriter, mockRepository);
         return mockRepository;
     }
 
@@ -42,13 +48,13 @@ public class MockRepository
     /// <param name="substitute"></param>
     public void Substitute<TService>(object substitute)
     {
-        if (_scrapperProxyMap.TryGetValue(typeof(TService), out var decorator))
+        if (_mockServiceProxyMap.TryGetValue(typeof(TService), out var decorator))
         {
             decorator.Substitute = substitute;
             return;
         }
 
-        _testLogWriter.WriteLine("crit: NMockRepository.Substitute - could not substitute {0} service!", typeof(TService));
+        _testLogWriter.LogDebug("Could not substitute {0} service!", typeof(TService));
     }
 
     /// <summary>
@@ -60,18 +66,18 @@ public class MockRepository
     /// <exception cref="InvalidOperationException"></exception>
     public TService? Substitute<TService>()
     {
-        if (_scrapperProxyMap.TryGetValue(typeof(TService), out var decorator))
+        if (_mockServiceProxyMap.TryGetValue(typeof(TService), out var decorator))
         {
             return (TService?)decorator.Substitute;
         }
 
-        throw new InvalidOperationException($"{typeof(TService).Name} service was not replaced within decorator");
+        throw new InvalidOperationException($"{typeof(TService).Name} service was not replaced within mock service proxy.");
     }
 
     #endregion -------------------
 
 
-    protected static void AddServiceProxies(IServiceCollection services, IReadOnlyCollection<IServiceType> substitutedServiceTypes, ITestLogWriter testLogWriter, MockRepository mockRepository)
+    protected static void BuildMockServiceProxies(IServiceCollection services, IReadOnlyCollection<IServiceType> substitutedServiceTypes, ITestLogWriter testLogWriter, MockRepository mockRepository)
     {
         Dictionary<Type, MockServiceProxy> scrapperProxyMap = new();
 
@@ -84,7 +90,7 @@ public class MockRepository
             }
             catch (InvalidOperationException ex)
             {
-                testLogWriter.WriteLine("Exception on selecting {0} service: {1}\n.Check mocking service list.", sd.ServiceType, ex);
+                testLogWriter.LogError(ex, "Exception on selecting {0} service: {1}\n.Check mocking service list.", sd.ServiceType);
                 throw;
             }
 
@@ -93,14 +99,14 @@ public class MockRepository
                 continue;
             }
 
-            Type serviceScraperType = AddServiceScraper(services, sd);
-            MockServiceProxy mockServiceProxy = new(serviceScraperType);
+            Type originalServiceContainerType = AddOriginalServiceContainer(services, sd);
+            MockServiceProxy mockServiceProxy = new(originalServiceContainerType);
 
             mockRepository.ReplaceServiceWithProxy(services, sd, mockServiceProxy);
             scrapperProxyMap.Add(sd.ServiceType, mockServiceProxy);
         }
 
-        mockRepository._scrapperProxyMap = scrapperProxyMap.ToImmutableDictionary();
+        mockRepository._mockServiceProxyMap = scrapperProxyMap.ToImmutableDictionary();
     }
 
     /// <summary>
@@ -108,9 +114,9 @@ public class MockRepository
     /// <param name="services"></param>
     /// <param name="sd"></param>
     /// <returns></returns>
-    private static Type AddServiceScraper(IServiceCollection services, ServiceDescriptor sd)
+    private static Type AddOriginalServiceContainer(IServiceCollection services, ServiceDescriptor sd)
     {
-        Type serviceProxyType = ServiceScrapperTypeFactory.MakeGenericFrom(sd.ServiceType);
+        Type originalServiceContainerType = OriginalServiceContainerTypeFactory.MakeGenericFrom(sd.ServiceType);
 
         ServiceDescriptor wrapperServiceDescriptor;
 
@@ -118,7 +124,7 @@ public class MockRepository
         {
             wrapperServiceDescriptor =
                 new ServiceDescriptor(
-                    serviceProxyType,
+                    originalServiceContainerType,
                     sd.ImplementationFactory,
                     sd.Lifetime);
         }
@@ -126,7 +132,7 @@ public class MockRepository
         {
             wrapperServiceDescriptor =
                 new ServiceDescriptor(
-                    serviceProxyType,
+                    originalServiceContainerType,
                     sp => ConstructType(sd, sp),
                     sd.Lifetime);
         }
@@ -134,12 +140,12 @@ public class MockRepository
         {
             wrapperServiceDescriptor =
                 new ServiceDescriptor(
-                    serviceProxyType,
+                    originalServiceContainerType,
                     sd.ImplementationInstance!);
         }
 
         services.Add(wrapperServiceDescriptor);
-        return serviceProxyType;
+        return originalServiceContainerType;
     }
 
     private static object ConstructType(ServiceDescriptor sd, IServiceProvider serviceProvider)
@@ -197,11 +203,11 @@ public class MockRepository
                         sp => Resolve(mockServiceProxy, sp)));
                     break;
             }
-            _testLogWriter.WriteLine("info: NMockRepository.Initialize - Decorator for {0} service has been added.", sd.ServiceType);
+            _testLogWriter.LogDebug("MockServiceProxy for {0} service has been added.", sd.ServiceType);
         }
         catch (Exception ex)
         {
-            _testLogWriter.WriteLine("crit: NMockRepository.Initialize - Exception on adding decorator for {0} service: {1}!", sd.ServiceType, ex);
+            _testLogWriter.LogError(ex, "Exception on adding decorator for {0} service: {1}!", sd.ServiceType);
             throw;
         }
     }

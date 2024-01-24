@@ -1,4 +1,4 @@
-﻿namespace p1eXu5.AspNetCore.MockRepository;
+﻿namespace p1eXu5.AspNetCore.Testing.MockRepository;
 
 /// <summary>
 /// Service <see cref="System.Type"/> decorator. Recognize a

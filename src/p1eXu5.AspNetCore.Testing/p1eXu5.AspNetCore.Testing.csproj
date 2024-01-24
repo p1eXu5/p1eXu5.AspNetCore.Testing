@@ -5,9 +5,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 
-    <Version>1.0.7</Version>
+    <Version>1.0.8</Version>
     <AssemblyVersion>1.0</AssemblyVersion>
-    <FileVersion>1.0.7.0</FileVersion>
+    <FileVersion>1.0.8.0</FileVersion>
     <Authors>p1eXu5</Authors>
     <Description>ASP.NET Core testing helpers.</Description>
     <Copyright>2023 Vladimir Likhatskiy</Copyright>
@@ -21,12 +21,12 @@
 
   <ItemGroup>
     <PackageReference Include="FluentAssertions.Web" Version="1.2.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
     <PackageReference Include="NSubstitute" Version="5.1.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\p1eXu5.AspNetCore.Testing.Logging\p1eXu5.AspNetCore.Testing.Logging.csproj" />
     <ProjectReference Include="..\p1eXu5.AspNetCore.Testing.MockRepository\p1eXu5.AspNetCore.Testing.MockRepository.csproj" />
   </ItemGroup>
 

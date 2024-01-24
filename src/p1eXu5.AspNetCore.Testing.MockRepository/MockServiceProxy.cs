@@ -1,18 +1,18 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace p1eXu5.AspNetCore.MockRepository;
+namespace p1eXu5.AspNetCore.Testing.MockRepository;
 
 public class MockServiceProxy
 {
-    private readonly Type _wrappedType;
+    private readonly Type _originalServiceContainerType;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MockServiceProxy"/> class.
     /// </summary>
-    /// <param name="serviceScraperType"></param>
-    internal MockServiceProxy(Type serviceScraperType)
+    /// <param name="originalServiceContainerType"></param>
+    internal MockServiceProxy(Type originalServiceContainerType)
     {
-        _wrappedType = serviceScraperType;
+        _originalServiceContainerType = originalServiceContainerType;
     }
 
     public object? Substitute { get; internal set; }
@@ -21,7 +21,7 @@ public class MockServiceProxy
     {
         if (Substitute is null)
         {
-            if (_wrappedType is null)
+            if (_originalServiceContainerType is null)
             {
                 throw new InvalidOperationException(
                     "Resolving service type is unknown. " +
@@ -29,7 +29,7 @@ public class MockServiceProxy
                     "and initialize with correct mocking service list. .");
             }
 
-            var service = serviceProvider.GetRequiredService(_wrappedType);
+            var service = serviceProvider.GetRequiredService(_originalServiceContainerType);
             return service;
         }
 

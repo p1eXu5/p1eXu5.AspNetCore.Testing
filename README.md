@@ -40,7 +40,7 @@ module SetUpFixture =
         TestContextWriters.Default.SetWriters(TestContext.Progress, TestContext.Out)
 ```
 
-- Serilog (use `p1eXu5.AspNetCore.Testing.Serilog`)
+## p1eXu5.AspNetCore.Testing.Serilog
 
 ```fsharp
 type FooWebApplicationFactory() =
@@ -65,4 +65,96 @@ type FooWebApplicationFactory() =
             |> ignore
         )
         |> ignore
+```
+
+## p1eXu5.AspNetCore.Testing
+
+### MockRepository
+
+```fsharp
+// Fixture module
+
+open Microsoft.Extensions.Logging
+open NUnit.Framework
+open p1eXu5.AspNetCore.Testing.Logging
+open p1eXu5.AspNetCore.Testing
+open p1eXu5.AspNetCore.Testing.MockRepository
+
+type internal FooWebApi =
+    {
+        Client: FooApiClient
+        MockRepository: MockRepository
+    }
+
+let mutable private client = Unchecked.defaultof<_>
+
+let mutable private _mockRepository = Unchecked.defaultof<_>
+
+let mutable internal _instance = Unchecked.defaultof<_>
+
+[<OneTimeSetUp>]
+let init () =
+    let tcw =
+        TestContextWriters.DefaultWith(TestContext.Progress, TestContext.Out)
+
+    let initLogger = TestLogger<FooWebApi>(tcw, LogOut.All) :> ILogger<DrugsWebApi>
+    let lorWriter = TestLogWriter(initLogger)
+
+    let factory =
+        (new FooWebApplicationFactory())
+            .WithWebHostBuilder(fun builder ->
+                builder.AddMockRepository(
+                    [Service<IFooRepository>()],
+                    lorWriter,
+                    (fun mr -> _mockRepository <- mr)
+                )
+            )
+
+    let fooApiClientLogger = TestLogger<DrugsApiClient>(tcw, LogOut.All) :> ILogger<DrugsApiClient>
+
+    _instance <-
+        {
+            Client = FooApiClient.init client fooApiClientLogger
+            MockRepository = _mockRepository
+        }
+
+[<OneTimeTearDown>]
+    let dispose () =
+        match box client with
+        | null -> ()
+        | _ ->
+            client.Dispose()
+
+// Test module
+
+open System.Threading
+open System.Linq
+
+open NUnit.Framework
+open FsUnit.TopLevelOperators
+open NSubstitute
+open p1eXu5.AspNetCore.Testing
+open p1eXu5.AspNetCore.Testing.Logging
+open p1eXu5.FSharp.Testing.ShouldExtensions
+
+[<SetUp>]
+    let setWriters () =
+        TestContextWriters.Default.SetWriters(TestContext.Progress, TestContext.Out)
+
+[<Test>]
+let ``search endpoint, when foo repo is empty, returns ok`` () =
+    task {
+        let fooRepoMock = FooWebApi._instance.MockRepository.TrySubstitute<IFooRepository>()
+        let _ =
+            fooRepoMock
+                .SearchFooAsync(Unchecked.defaultof<_>, Unchecked.defaultof<_>)
+                .ReturnsForAnyArgs(Enumerable.Empty<FooCard>())
+
+        let! response = FooWebApi._instance.Client.SearchAsync "foo" CancellationToken.None
+
+        response |> should be (ofCase <@ ApiRequestResult<FooCard list>.Ok @>)
+        let! _ = fooRepoMock.ReceivedWithAnyArgs(1).SearchFooAsync(Unchecked.defaultof<_>, Unchecked.defaultof<_>)
+
+        return ()
+    }
 ```
