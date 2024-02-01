@@ -22,6 +22,15 @@ public static class MockRepositoryExtensions
         return mock;
     }
 
+    [return: NotNull]
+    public static TMock ForceSubstitute<TMock>(this MockRepository.MockRepository nMockRepository)
+        where TMock : class
+    {
+        var mock = Substitute.For<TMock>();
+        nMockRepository.Substitute<TMock>(mock);
+        return mock;
+    }
+
     public static void AddMockRepository(
         this IWebHostBuilder webHostBuilder,
         IReadOnlyCollection<IServiceType> substitutedServiceTypes,

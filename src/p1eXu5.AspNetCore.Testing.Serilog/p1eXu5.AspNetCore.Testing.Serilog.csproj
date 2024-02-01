@@ -5,16 +5,16 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 
-    <Version>1.0.8</Version>
+    <Version>1.0.9</Version>
     <AssemblyVersion>1.0</AssemblyVersion>
-    <FileVersion>1.0.8.0</FileVersion>
+    <FileVersion>1.0.9.0</FileVersion>
     <Authors>p1eXu5</Authors>
     <Description>ASP.NET Core testing helpers.</Description>
     <Copyright>2023 Vladimir Likhatskiy</Copyright>
     <NeutralLanguage>en-US</NeutralLanguage>
     <RepositoryUrl>https://github.com/p1eXu5/p1eXu5.AspNetCore.Testing</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageTags>asp.net;core;c#;testing;mock;di;logging;.net7</PackageTags>
+    <PackageTags>asp.net;core;c#;testing;mock;di;logging;.net7;.net8</PackageTags>
 
     <AnalysisMode>all-latest</AnalysisMode>
   </PropertyGroup>
