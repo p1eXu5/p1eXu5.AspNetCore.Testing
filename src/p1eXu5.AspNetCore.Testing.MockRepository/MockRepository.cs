@@ -1,6 +1,7 @@
 ﻿using System.Collections.Immutable;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
 
 namespace p1eXu5.AspNetCore.Testing.MockRepository;
 
@@ -68,6 +69,11 @@ public class MockRepository
     {
         if (_mockServiceProxyMap.TryGetValue(typeof(TService), out var decorator))
         {
+            if (decorator.Substitute is null)
+            {
+                _testLogWriter.LogWarning("Substitute of type {0} is null!");
+            }
+
             return (TService?)decorator.Substitute;
         }
 

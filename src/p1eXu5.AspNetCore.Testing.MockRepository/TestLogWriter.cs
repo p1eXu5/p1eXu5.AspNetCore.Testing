@@ -19,4 +19,10 @@ public class TestLogWriter : ITestLogWriter
 
     public void LogError(Exception exception, string message, object arg)
         => _testLogger.LogError(exception, message, arg);
+
+    public void LogWarning(string message)
+        => _testLogger.LogWarning(message);
+
+    public void LogWarning(string message, object arg)
+        => _testLogger.LogWarning(message, arg);
 }

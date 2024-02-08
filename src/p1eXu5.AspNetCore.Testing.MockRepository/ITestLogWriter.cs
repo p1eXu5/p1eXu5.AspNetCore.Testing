@@ -6,5 +6,9 @@ public interface ITestLogWriter
 
     void LogDebug(string message, object arg);
 
+    void LogWarning(string message);
+
+    void LogWarning(string message, object arg);
+
     void LogError(Exception exception, string message, object arg);
 }
