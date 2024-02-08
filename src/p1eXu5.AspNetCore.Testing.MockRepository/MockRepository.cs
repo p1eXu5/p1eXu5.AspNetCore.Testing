@@ -71,7 +71,7 @@ public class MockRepository
         {
             if (decorator.Substitute is null)
             {
-                _testLogWriter.LogWarning("Substitute of type {0} is null!");
+                _testLogWriter.LogWarning("Substitute of type {0} is null!", typeof(TService).FullName!);
             }
 
             return (TService?)decorator.Substitute;
