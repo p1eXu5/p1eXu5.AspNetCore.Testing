@@ -13,13 +13,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "root", "root", "{22CCE171-3
 	ProjectSection(SolutionItems) = preProject
 		pack.cmd = pack.cmd
 		pack.fsx = pack.fsx
-		.github\workflows\publisher.yml = .github\workflows\publisher.yml
 		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "p1eXu5.AspNetCore.Testing.MockRepository", "src\p1eXu5.AspNetCore.Testing.MockRepository\p1eXu5.AspNetCore.Testing.MockRepository.csproj", "{9FAEC9BF-570A-46A5-A4FB-5D775580A161}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "p1eXu5.AspNetCore.Testing.Serilog", "src\p1eXu5.AspNetCore.Testing.Serilog\p1eXu5.AspNetCore.Testing.Serilog.csproj", "{C4F5CCE5-5458-4FF0-A206-583690FF122B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "p1eXu5.AspNetCore.Testing.Serilog", "src\p1eXu5.AspNetCore.Testing.Serilog\p1eXu5.AspNetCore.Testing.Serilog.csproj", "{C4F5CCE5-5458-4FF0-A206-583690FF122B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{C635E298-8964-4B40-9B9B-1F8311ACDFA3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{4D704FCE-7E38-4253-8869-6946CB5B55AD}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\publisher.yml = .github\workflows\publisher.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -52,6 +58,8 @@ Global
 		{D6AF8569-D22E-4170-AC63-E7C8132FA8F5} = {BAE9E8AD-5844-4DE6-AA33-A3F4F9882B66}
 		{9FAEC9BF-570A-46A5-A4FB-5D775580A161} = {BAE9E8AD-5844-4DE6-AA33-A3F4F9882B66}
 		{C4F5CCE5-5458-4FF0-A206-583690FF122B} = {BAE9E8AD-5844-4DE6-AA33-A3F4F9882B66}
+		{C635E298-8964-4B40-9B9B-1F8311ACDFA3} = {22CCE171-3BCF-49EE-A859-41C1B16CBAB0}
+		{4D704FCE-7E38-4253-8869-6946CB5B55AD} = {C635E298-8964-4B40-9B9B-1F8311ACDFA3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A439FF3F-1ABB-47D1-9E30-C681638C8385}

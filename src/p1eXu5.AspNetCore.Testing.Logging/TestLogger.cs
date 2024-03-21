@@ -172,7 +172,7 @@ public class TestLogger : ILogger
 public class TestLogger<T> : TestLogger, ILogger<T>
 {
     public TestLogger(ITestContextWriters testContext, LogOut logOut = LogOut.Progress)
-        : base(testContext, typeof(T).Name, logOut)
+        : base(testContext, typeof(T).FullName ?? typeof(T).Name, logOut)
     {
     }
 }

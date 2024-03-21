@@ -5,9 +5,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 
-    <Version>1.0.12</Version>
+    <Version>1.0.14</Version>
     <AssemblyVersion>1.0</AssemblyVersion>
-    <FileVersion>1.0.12.0</FileVersion>
+    <FileVersion>1.0.14.0</FileVersion>
     <Authors>p1eXu5</Authors>
     <Description>ASP.NET Core testing helpers.</Description>
     <Copyright>2023 Vladimir Likhatskiy</Copyright>
@@ -16,6 +16,12 @@
     <RepositoryType>git</RepositoryType>
     <PackageTags>asp.net;core;c#;testing;mock;di;logging;.net7;.net8</PackageTags>
 
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <DebugType>pdbonly</DebugType>
+    
     <AnalysisMode>all-latest</AnalysisMode>
   </PropertyGroup>
 
