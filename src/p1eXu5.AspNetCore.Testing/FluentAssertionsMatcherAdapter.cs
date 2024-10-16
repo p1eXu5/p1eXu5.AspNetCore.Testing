@@ -2,6 +2,7 @@
  * Source code grabbed from https://github.com/PapGroup/NSubstitute.FluentAssertionsBridge
  */
 
+using System.Runtime.ExceptionServices;
 using FluentAssertions.Execution;
 using NSubstitute.Core;
 using NSubstitute.Core.Arguments;
@@ -13,6 +14,7 @@ internal class FluentAssertionsMatcherAdapter<T> : IArgumentMatcher<T>, IDescrib
     private readonly Action<T?> _assertion;
 
     private List<string> _errors = new();
+    private Exception? _exception;
 
     public FluentAssertionsMatcherAdapter(Action<T?> assertion)
     {
@@ -23,14 +25,27 @@ internal class FluentAssertionsMatcherAdapter<T> : IArgumentMatcher<T>, IDescrib
     {
         using var scope = new AssertionScope();
 
-        _assertion(argument);
-        _errors = scope.Discard().ToList();
+        try
+        {
+            _assertion(argument);
+            _errors = scope.Discard().ToList();
+        }
+        catch (Exception ex)
+        {
+            _exception = ex;
+            _errors.Add(ex.Message);
+        }
 
         return _errors.Count == 0;
     }
 
     public string DescribeFor(object? argument)
     {
+        if (_exception is { })
+        {
+            ExceptionDispatchInfo.Capture(_exception).Throw();
+        }
+
         return string.Join(Environment.NewLine, _errors);
     }
 }
