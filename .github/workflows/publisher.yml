@@ -36,12 +36,12 @@ jobs:
       run: |
         # dotnet pack --no-build --configuration Release src/p1eXu5.AspNetCore.Testing.MockRepository/p1eXu5.AspNetCore.Testing.MockRepository.csproj --output .
         # dotnet pack --no-build --configuration Release src/p1eXu5.AspNetCore.Testing/p1eXu5.AspNetCore.Testing.csproj --output .
-        dotnet pack --no-build --configuration Release src/p1eXu5.AspNetCore.Testing.Logging/p1eXu5.AspNetCore.Testing.Logging.csproj --output .
-        # dotnet pack --no-build --configuration Release src/p1eXu5.AspNetCore.Testing.Serilog/p1eXu5.AspNetCore.Testing.Serilog.csproj --output .
+        # dotnet pack --no-build --configuration Release src/p1eXu5.AspNetCore.Testing.Logging/p1eXu5.AspNetCore.Testing.Logging.csproj --output .
+        dotnet pack --no-build --configuration Release src/p1eXu5.AspNetCore.Testing.Serilog/p1eXu5.AspNetCore.Testing.Serilog.csproj --output .
       
     - name: Publish to GitHub packages
       run: |
         # dotnet nuget push p1eXu5.AspNetCore.Testing.MockRepository.1*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source "github" --skip-duplicate
         # dotnet nuget push p1eXu5.AspNetCore.Testing.1*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source "github" --skip-duplicate
-        dotnet nuget push p1eXu5.AspNetCore.Testing.Logging.1*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source "github" --skip-duplicate
-        # dotnet nuget push p1eXu5.AspNetCore.Testing.Serilog.1*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source "github" --skip-duplicate
+        # dotnet nuget push p1eXu5.AspNetCore.Testing.Logging.1*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source "github" --skip-duplicate
+        dotnet nuget push p1eXu5.AspNetCore.Testing.Serilog.1*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source "github" --skip-duplicate
