@@ -23,7 +23,7 @@ public class TestLogger : ILogger
     /// </summary>
     /// <param name="testContextWriters">Implementation of <see cref="ITestContextWriters"/>.<br/>Instance of <see cref="TestContextWriters"/> can be used.</param>
     /// <param name="categoryName"></param>
-    /// <param name="logOut">Where to write logs.</param>
+    /// <param name="logOut">Where to write logs. Default - <see cref="LogOut.Progress"/>.</param>
     public TestLogger(ITestContextWriters testContextWriters, string categoryName, LogOut logOut = LogOut.Progress)
         : this(testContextWriters, categoryName, filter: null)
     {
@@ -34,12 +34,12 @@ public class TestLogger : ILogger
     /// Initializes a new instance of the <see cref="TestLogger"/> class.
     /// </summary>
     /// <param name="testContextWriters">Implementation of <see cref="ITestContextWriters"/>.<br/>Instance of <see cref="TestContextWriters"/> can be used.</param>
-    /// <param name="name"></param>
+    /// <param name="categoryName"></param>
     /// <param name="filter"></param>
-    /// <param name="logOut">Where to write logs.</param>
-    public TestLogger(ITestContextWriters testContextWriters, string name, Func<string, LogLevel, bool>? filter, LogOut logOut = LogOut.Progress)
+    /// <param name="logOut">Where to write logs. Default - <see cref="LogOut.Progress"/>.</param>
+    public TestLogger(ITestContextWriters testContextWriters, string categoryName, Func<string, LogLevel, bool>? filter, LogOut logOut = LogOut.Progress)
     {
-        _categoryName = string.IsNullOrEmpty(name) ? nameof(TestLogger) : name;
+        _categoryName = string.IsNullOrEmpty(categoryName) ? nameof(TestLogger) : categoryName;
         _testContext = testContextWriters;
         _filter = filter;
         _logOut = logOut;

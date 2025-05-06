@@ -5,9 +5,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 
-    <Version>1.1.16</Version>
-    <AssemblyVersion>1.1</AssemblyVersion>
-    <FileVersion>1.1.16.0</FileVersion>
+    <Version>1.2.0</Version>
+    <AssemblyVersion>1.2.0</AssemblyVersion>
+    <FileVersion>1.2.0.0</FileVersion>
     <Authors>p1eXu5</Authors>
     <Description>ASP.NET Core testing helpers.</Description>
     <Copyright>2023 Vladimir Likhatskiy</Copyright>
@@ -28,7 +28,7 @@
 
   <ItemGroup>
     <PackageReference Include="p1eXu5.AspNetCore.Testing.Logging" Version="1.1.16" />
-    <PackageReference Include="Serilog" Version="4.1.0" />
+    <PackageReference Include="Serilog" Version="4.2.0" />
   </ItemGroup>
 
 </Project>
