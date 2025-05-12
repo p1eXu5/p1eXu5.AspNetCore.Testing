@@ -175,4 +175,9 @@ public class TestLogger<T> : TestLogger, ILogger<T>
         : base(testContext, typeof(T).FullName ?? typeof(T).Name, logOut)
     {
     }
+
+    public TestLogger(ITestContextWriters testContextWriters, string categoryName, Func<string, LogLevel, bool>? filter, LogOut logOut = LogOut.Progress)
+        : base(testContextWriters, categoryName, filter, logOut)
+    {
+    }
 }
