@@ -16,6 +16,7 @@ public static class NUnitLoggerConfigurationExtensions
     public static LoggerConfiguration NUnitOutput(
         this LoggerSinkConfiguration sinkConfiguration,
         ITestContextWriters testContextWriters,
+        LogOut logOut = LogOut.Progress,
         LogEventLevel restrictedToMinimumLevel = LevelAlias.Minimum,
         IFormatProvider? formatProvider = null,
         LoggingLevelSwitch? levelSwitch = null,
@@ -28,6 +29,6 @@ public static class NUnitLoggerConfigurationExtensions
 
         var formatter = new MessageTemplateTextFormatter(outputTemplate, formatProvider);
 
-        return sinkConfiguration.Sink(new NUnitSink(testContextWriters, formatter), restrictedToMinimumLevel, levelSwitch);
+        return sinkConfiguration.Sink(new NUnitSink(testContextWriters, formatter, logOut), restrictedToMinimumLevel, levelSwitch);
     }
 }
