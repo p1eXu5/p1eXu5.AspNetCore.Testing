@@ -4,26 +4,23 @@ namespace p1eXu5.AspNetCore.Testing.Logging;
 
 public class TestLoggerFactory : ILoggerFactory
 {
-    private readonly ITestContextWriters _testContextWriters;
-    private readonly LogOut _logOut;
+    private ILoggerProvider _loggerProvider;
 
     public TestLoggerFactory(ITestContextWriters testContextWriters, LogOut logOut = LogOut.All)
     {
-        _testContextWriters = testContextWriters;
-        _logOut = logOut;
+        _loggerProvider = new TestLoggerProvider(testContextWriters, logOut);
     }
 
-    public static ILoggerFactory CreateWith(TextWriter? progressWriter, TextWriter? outWriter)
-        => new TestLoggerFactory(TestContextWriters.DefaultWith(progressWriter, outWriter));
+    public static ILoggerFactory Create<TTestContext>()
+        => new TestLoggerFactory(TestContextWriters.GetInstance<TTestContext>());
 
     public void AddProvider(ILoggerProvider provider)
     {
+        _loggerProvider = provider;
     }
 
     public ILogger CreateLogger(string categoryName)
-        => new TestLogger(_testContextWriters, categoryName, _logOut);
+        => _loggerProvider.CreateLogger(categoryName);
 
-    public void Dispose()
-    {
-    }
+    public void Dispose() => _loggerProvider.Dispose();
 }

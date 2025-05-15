@@ -28,5 +28,6 @@ public class TestLoggerProvider : ILoggerProvider
 
     public void Dispose()
     {
+        _testContext.Dispose();
     }
 }

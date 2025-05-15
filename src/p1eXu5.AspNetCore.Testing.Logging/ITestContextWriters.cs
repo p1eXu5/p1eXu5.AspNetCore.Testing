@@ -9,18 +9,20 @@
 /// in test method itself.
 /// </para>
 /// </summary>
-public interface ITestContextWriters
+public interface ITestContextWriters : IDisposable
 {
     /// <summary>
     /// Output console. <br/>
     /// If NUnit is used writers are may be different in setup and test methods.<br/>
     /// The value may need to be reassigned.
     /// </summary>
-    TextWriter? Progress { get; }
+    ITestTextWriter? Progress { get; }
 
     /// <summary>
     /// If NUnit is used writers are may be different in setup and test methods.<br/>
     /// The value may need to be reassigned.
     /// </summary>
-    TextWriter? Out { get; }
+    ITestTextWriter? Out { get; }
+
+    ITestContextWriters Freeze();
 }

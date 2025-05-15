@@ -1,78 +1,112 @@
-﻿namespace p1eXu5.AspNetCore.Testing.Logging;
+﻿using System.Reflection;
+
+namespace p1eXu5.AspNetCore.Testing.Logging;
 
 /// <inheritdoc cref="ITestContextWriters"/>
-public class TestContextWriters : ITestContextWriters
+public sealed class TestContextWriters : ITestContextWriters
 {
     private static TestContextWriters? _default;
 
-    private Func<TextWriter?>? _progressWriterFactory;
-    private Func<TextWriter?>? _outWriterFactory;
+    private MethodInfo? _outWriterMethodInfo;
+    private FieldInfo? _progressWriterMethodInfo;
 
-    private TextWriter? _progressWriter;
     private TextWriter? _outWriter;
+    private TextWriter? _progressWriter;
 
-    public TestContextWriters(TextWriter? progressWriter, TextWriter? outWriter)
-        => SetWriters(progressWriter, outWriter);
+    private bool _isDisposed = false;
 
-    public TestContextWriters(Func<TextWriter?>? progressWriterFactory, Func<TextWriter?>? outWriterFactory)
-        => SetWriters(progressWriterFactory, outWriterFactory);
-
-    public static TestContextWriters Default => _default ??= new((TextWriter?)null, null);
-
-    /// <inheritdoc/>
-    public TextWriter? Progress
+    private TestContextWriters(Type testContextType)
     {
-        get
+        // if type is static
+        if (testContextType.IsClass)
         {
-            if (_progressWriterFactory is { })
-            {
-                return _progressWriterFactory();
-            }
+            var flags = BindingFlags.Public | BindingFlags.Static;
 
-            return _progressWriter;
+            _outWriterMethodInfo = testContextType.GetProperty("Out", flags | BindingFlags.GetProperty)?.GetGetMethod();
+            _progressWriterMethodInfo = testContextType.GetField("Progress", flags);
         }
     }
 
-    /// <inheritdoc/>
-    public TextWriter? Out
+    private TestContextWriters(TextWriter? outWriter, TextWriter? progressWriter)
     {
-        get
-        {
-            if (_outWriterFactory is { })
-            {
-                return _outWriterFactory();
-            }
-
-            return _outWriter;
-        }
-    }
-
-    public static TestContextWriters DefaultWith(TextWriter? progressWriter, TextWriter? outWriter)
-    {
-        _default ??= new(progressWriter, outWriter);
-        return _default;
-    }
-
-    public static TestContextWriters DefaultWith(Func<TextWriter?>? progressWriterFactory, Func<TextWriter?>? outWriterFactory)
-    {
-        _default ??= new(progressWriterFactory, outWriterFactory);
-        return _default;
-    }
-
-    /// <summary>
-    /// NUnit TestContext may be different for OneTimeSetup-methods and test methods.
-    /// </summary>
-    /// <param name="progressWriter"></param>
-    /// <param name="outWriter"></param>
-    public void SetWriters(TextWriter? progressWriter, TextWriter? outWriter)
-    {
-        _progressWriter = progressWriter;
         _outWriter = outWriter;
+        _progressWriter = progressWriter;
     }
 
-    public void SetWriters(Func<TextWriter?>? progressWriterFactory, Func<TextWriter?>? outWriterFactory)
+    public static TestContextWriters GetInstance<TTestContext>() => _default ??= new(typeof(TTestContext));
+
+    public void Dispose()
     {
-        _progressWriterFactory = progressWriterFactory;
-        _outWriterFactory = outWriterFactory;
+        if (_isDisposed) return;
+
+        _outWriterMethodInfo = null;
+        _progressWriterMethodInfo = null;
+        _outWriter = null;
+        _progressWriter = null;
+    }
+
+    public ITestContextWriters Freeze()
+    {
+        if (_isDisposed) throw new ObjectDisposedException(nameof(TestContextWriters));
+
+        if (_outWriter is { } || _progressWriter is { })
+        {
+            return this;
+        }
+
+        var inst = new TestContextWriters(
+            _outWriterMethodInfo?.Invoke(null, null) as TextWriter,
+            _progressWriterMethodInfo?.GetValue(null) as TextWriter);
+
+        inst._outWriterMethodInfo = null;
+        inst._progressWriterMethodInfo = null;
+
+        return inst;
+    }
+
+    /// <inheritdoc/>
+    public ITestTextWriter? Out
+    {
+        get
+        {
+            var textWriter = _outWriter ?? _outWriterMethodInfo?.Invoke(null, null) as TextWriter;
+            if (textWriter is { })
+            {
+                return new TestTextWriter(textWriter);
+            }
+
+            return null;
+        }
+    }
+
+    /// <inheritdoc/>
+    public ITestTextWriter? Progress
+    {
+        get
+        {
+            var textWriter = _progressWriter ?? _progressWriterMethodInfo?.GetValue(null) as TextWriter;
+            if (textWriter is { })
+            {
+                return new TestTextWriter(textWriter);
+            }
+
+            return null;
+        }
+    }
+
+    private sealed class TestTextWriter : ITestTextWriter
+    {
+        private readonly TextWriter _textWriter;
+
+        internal TestTextWriter(TextWriter textWriter)
+        {
+            _textWriter = textWriter;
+        }
+
+        public void Dispose()
+        { }
+
+        public void WriteLine(string message) => _textWriter.WriteLine(message);
     }
 }
+

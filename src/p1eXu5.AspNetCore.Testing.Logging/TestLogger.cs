@@ -92,25 +92,22 @@ public class TestLogger : ILogger
 
     public bool IsEnabled(LogLevel logLevel)
     {
-        return RunningInNUnitContext() && logLevel != LogLevel.None
+        return logLevel != LogLevel.None
         && (_filter is null || _filter(_categoryName, logLevel));
-    }
-
-    private bool RunningInNUnitContext()
-    {
-        return _testContext.Progress is not null || _testContext.Out is not null;
     }
 
     private void WriteMessage(string message)
     {
         if ((_logOut & LogOut.Progress) > 0)
         {
-            _testContext.Progress?.WriteLine(message);
+            using var progressWriter = _testContext.Progress;
+            progressWriter?.WriteLine(message);
         }
 
         if ((_logOut & LogOut.Out) > 0)
         {
-            _testContext.Out?.WriteLine(message);
+            using var outWriter = _testContext.Out;
+            outWriter?.WriteLine(message);
         }
     }
 

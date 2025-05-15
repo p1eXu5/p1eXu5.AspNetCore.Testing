@@ -7,7 +7,7 @@ namespace p1eXu5.AspNetCore.Testing.Logging;
 public static class LoggingBuilderExtensions
 {
     /// <summary>
-    /// Extension method to add a test logger to the logging builder.
+    /// Extension method to add a test logger to the logging builder. Freezes <paramref name="testContext"/>.
     /// </summary>
     /// <param name="builder">The logging builder.</param>
     /// <param name="testContext">The test context writers.</param>
@@ -17,7 +17,7 @@ public static class LoggingBuilderExtensions
     {
         builder.Services.TryAddEnumerable(
             ServiceDescriptor.Singleton<ILoggerProvider, TestLoggerProvider>(_ =>
-                new TestLoggerProvider(testContext, logOut)));
+                new TestLoggerProvider(testContext.Freeze(), logOut)));
 
         return builder;
     }
