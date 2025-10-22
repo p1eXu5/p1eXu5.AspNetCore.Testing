@@ -1,0 +1,17 @@
+<Solution>
+  <Folder Name="/root/">
+    <File Path="pack.cmd" />
+    <File Path="pack.fsx" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/root/.github/" />
+  <Folder Name="/root/.github/workflows/">
+    <File Path=".github/workflows/publisher.yml" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/p1eXu5.AspNetCore.Testing.Logging/p1eXu5.AspNetCore.Testing.Logging.csproj" />
+    <Project Path="src/p1eXu5.AspNetCore.Testing.MockRepository/p1eXu5.AspNetCore.Testing.MockRepository.csproj" />
+    <Project Path="src/p1eXu5.AspNetCore.Testing.Serilog/p1eXu5.AspNetCore.Testing.Serilog.csproj" />
+    <Project Path="src/p1eXu5.AspNetCore.Testing/p1eXu5.AspNetCore.Testing.csproj" />
+  </Folder>
+</Solution>
