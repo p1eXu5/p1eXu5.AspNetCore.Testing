@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/examples/">
+    <Project Path="examples/WebApiWithSerilog/WebApiWithSerilog.csproj" Id="931c2a36-1259-4601-95cb-f4c2825f3bdd" />
+  </Folder>
   <Folder Name="/root/">
     <File Path="pack.cmd" />
     <File Path="pack.fsx" />
