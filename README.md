@@ -26,9 +26,7 @@ let private logger = TestLogger<Foo>(TestContextWriters.GetInstance<TestContext>
 let private loggerFactory = TestLoggerFactory(TestContextWriters.GetInstance<TestContext>())
 ```
 
-## p1eXu5.AspNetCore.Testing.Serilog
-
-Not all logs are emitted. Use AddTestLogger instead:
+## p1eXu5.AspNetCore.Testing.Logging
 
 ```cs
 // WebApplicationFactory<_>
@@ -37,17 +35,39 @@ protected override void ConfigureWebHost(IWebHostBuilder builder)
     builder.ConfigureServices(services =>
     {
         services.AddSerilog(
-            (IServiceProvider services, LoggerConfiguration lc) =>
-                lc.MinimumLevel.Debug(),
-            writeToProviders: true);
-            
+            (services, lc) => lc.MinimumLevel.Debug(),
+            writeToProviders: true // to use Microsoft logger providers
+        );
+
         services.AddLogging(cfg =>
         {
             cfg.ClearProviders();
             // cfg.SetMinimumLevel(LogLevel.Warning); // is not accounting
-            cfg.AddTestLogger(TestContextWriters.GetInstance&lt;TestContext&gt;(), LogOut.All);
-        }
-    }
+            cfg.AddTestLogger(TestContextWriters.GetInstance<TestContext>(), LogOut.All);
+        });
+    });
+}
+```
+
+## p1eXu5.AspNetCore.Testing.Seriloig
+
+```cs
+// WebApplicationFactory<_>
+protected override void ConfigureWebHost(IWebHostBuilder builder)
+{
+    builder.ConfigureServices(services =>
+    {
+        builder.UseSetting("Serilog:Using:2", "p1eXu5.AspNetCore.Testing.Serilog");
+        builder.UseSetting("Serilog:WriteTo:2:Name", "NUnit");
+        builder.UseSetting("Serilog:WriteTo:2:Args:logOut", "2"); // 1 - Progress, 2 - Out, 3 - LogOut.All (default)
+
+        builder.ConfigureAppConfiguration((ctx, b) =>
+        {
+            ctx.Configuration["Serilog:WriteTo:0"] = ""; // disable Console (if set)
+            ctx.Configuration["Serilog:WriteTo:1"] = ""; // disable Debug (if set)
+            ctx.Configuration["Serilog:WriteTo:2"] = null; // reset to null, cause is set as ""
+        });
+    });
 }
 ```
 
