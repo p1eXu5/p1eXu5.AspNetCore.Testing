@@ -3,7 +3,9 @@ using Serilog.Core;
 using Serilog.Events;
 using Serilog.Formatting.Display;
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace p1eXu5.AspNetCore.Testing.Serilog.Sinks.NUnit;
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 
 public class NUnitSink : ILogEventSink
 {
@@ -13,10 +15,7 @@ public class NUnitSink : ILogEventSink
 
     public NUnitSink(ITestContextWriters testContextWriters, MessageTemplateTextFormatter formatter, LogOut logOut = LogOut.Progress)
     {
-        if (formatter == null)
-        {
-            throw new ArgumentNullException(nameof(formatter));
-        }
+        ArgumentNullException.ThrowIfNull(formatter);
         _testContextWriters = testContextWriters;
         _formatter = formatter;
         _logOut = logOut;
@@ -24,10 +23,7 @@ public class NUnitSink : ILogEventSink
 
     public void Emit(LogEvent logEvent)
     {
-        if (logEvent == null)
-        {
-            throw new ArgumentNullException(nameof(logEvent));
-        }
+        ArgumentNullException.ThrowIfNull(logEvent);
 
         var @out = (_logOut & LogOut.Out) > 0 ? _testContextWriters.Out : null;
         var progress = (_logOut & LogOut.Progress) > 0 ? _testContextWriters.Progress : null;
