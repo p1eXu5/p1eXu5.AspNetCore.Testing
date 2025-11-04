@@ -1,70 +1,54 @@
 p1eXu5.AspNetCore.Testing
 =========================
 
+```mermaid
+flowchart BT
+  log["p1eXu5.AspNetCore.Testing.Logging"]
+  tst["p1eXu5.AspNetCore.Testing"]
+  moq["p1eXu5.AspNetCore.Testing.MockRepository"]
+  ser["p1eXu5.AspNetCore.Testing.Serilog"]
+
+  tst -.-> moq
+  ser -.-> log
+```
+
 ## p1eXu5.AspNetCore.Testing.Logging
+
+### Create ILogger
+
+```fsharp
+let private logger = TestLogger<Foo>(TestContextWriters.GetInstance<TestContext>(), LogOut.All) :> ILogger<DrugsApiClient>
+```
 
 ### Create ILoggerFactory
 
-- F#, NUnit
-
 ```fsharp
-let private loggerFactory =
-    { new ILoggerFactory with
-        member _.AddProvider(_: ILoggerProvider) = ()
-        member _.CreateLogger(categoryName: string) =
-            TestLogger(TestContextWriters(Progress = TestContext.Progress, Out = TestContext.Out), categoryName, LogOut.All)
-            :> ILogger
-        member _.Dispose() = ()
-    }
-```
-
-
-```fsharp
-[<SetUpFixture>]
-module SetUpFixture =
-
-    [<OneTimeSetUp>]
-    let init () =
-        let tcw = TestContextWriters.DefaultWith(TestContext.Progress,TestContext.Out)
-        let handlerLogger = TestLogger<LogHttpRequestDelegatingHandler>(tcw, LogOut.All) :> ILogger<LogHttpRequestDelegatingHandler>
-```
-
-Or:
-
-```fsharp
-[<SetUpFixture>]
-module SetUpFixture =
-
-    [<OneTimeSetUp>]
-    let init () =
-        TestContextWriters.Default.SetWriters(TestContext.Progress, TestContext.Out)
+let private loggerFactory = TestLoggerFactory(TestContextWriters.GetInstance<TestContext>())
 ```
 
 ## p1eXu5.AspNetCore.Testing.Serilog
 
-```fsharp
-type FooWebApplicationFactory() =
-    inherit WebApplicationFactory<Program>()
+Not all logs are emitted. Use AddTestLogger instead:
 
-    override _.ConfigureWebHost(builder: IWebHostBuilder) =
-        builder
-            .UseSetting("ASPNETCORE_ENVIRONMENT", "Development")
-            .UseSetting("IsInTest", "true")
-            .UseSetting("InMemory", "true") |> ignore
-
-        builder.ConfigureServices(fun (services: IServiceCollection) ->
-            services.AddSerilog(
-                (new LoggerConfiguration())
-                    .MinimumLevel.Verbose()
-                    .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
-                    .Enrich.FromLogContext()
-                    .Enrich.WithProperty("Application", "Foo Web API")
-                    .WriteTo.NUnitOutput(TestContextWriters.Default)
-                    .CreateLogger()
-            )
-            |> ignore
-        )
-        |> ignore
+```cs
+// WebApplicationFactory<_>
+protected override void ConfigureWebHost(IWebHostBuilder builder)
+{
+    builder.ConfigureServices(services =>
+    {
+        services.AddSerilog(
+            (IServiceProvider services, LoggerConfiguration lc) =>
+                lc.MinimumLevel.Debug(),
+            writeToProviders: true);
+            
+        services.AddLogging(cfg =>
+        {
+            cfg.ClearProviders();
+            // cfg.SetMinimumLevel(LogLevel.Warning); // is not accounting
+            cfg.AddTestLogger(TestContextWriters.GetInstance&lt;TestContext&gt;(), LogOut.All);
+        }
+    }
+}
 ```
 
 ## p1eXu5.AspNetCore.Testing
@@ -94,12 +78,6 @@ let mutable internal _instance = Unchecked.defaultof<_>
 
 [<OneTimeSetUp>]
 let init () =
-    let tcw =
-        TestContextWriters.DefaultWith(TestContext.Progress, TestContext.Out)
-
-    let initLogger = TestLogger<FooWebApi>(tcw, LogOut.All) :> ILogger<DrugsWebApi>
-    let lorWriter = TestLogWriter(initLogger)
-
     let factory =
         (new FooWebApplicationFactory())
             .WithWebHostBuilder(fun builder ->
@@ -110,7 +88,7 @@ let init () =
                 )
             )
 
-    let fooApiClientLogger = TestLogger<DrugsApiClient>(tcw, LogOut.All) :> ILogger<DrugsApiClient>
+    let fooApiClientLogger = TestLogger<DrugsApiClient>(TestContextWriters.GetInstance<TestContext>(), LogOut.All) :> ILogger<DrugsApiClient>
 
     _instance <-
         {
