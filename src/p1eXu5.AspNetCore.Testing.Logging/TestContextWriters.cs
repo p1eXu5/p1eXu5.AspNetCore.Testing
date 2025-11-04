@@ -35,6 +35,8 @@ public sealed class TestContextWriters : ITestContextWriters
 
     public static TestContextWriters GetInstance<TTestContext>() => _default ??= new(typeof(TTestContext));
 
+    public static TestContextWriters GetInstance(Type testContextType) => _default ??= new(testContextType);
+
     public void Dispose()
     {
         if (_isDisposed) return;
@@ -43,11 +45,13 @@ public sealed class TestContextWriters : ITestContextWriters
         _progressWriterMethodInfo = null;
         _outWriter = null;
         _progressWriter = null;
+
+        _isDisposed = true;
     }
 
     public ITestContextWriters Freeze()
     {
-        if (_isDisposed) throw new ObjectDisposedException(nameof(TestContextWriters));
+        ObjectDisposedException.ThrowIf(_isDisposed, this);
 
         if (_outWriter is { } || _progressWriter is { })
         {
@@ -56,10 +60,11 @@ public sealed class TestContextWriters : ITestContextWriters
 
         var inst = new TestContextWriters(
             _outWriterMethodInfo?.Invoke(null, null) as TextWriter,
-            _progressWriterMethodInfo?.GetValue(null) as TextWriter);
-
-        inst._outWriterMethodInfo = null;
-        inst._progressWriterMethodInfo = null;
+            _progressWriterMethodInfo?.GetValue(null) as TextWriter)
+        {
+            _outWriterMethodInfo = null,
+            _progressWriterMethodInfo = null
+        };
 
         return inst;
     }
@@ -69,6 +74,7 @@ public sealed class TestContextWriters : ITestContextWriters
     {
         get
         {
+            ObjectDisposedException.ThrowIf(_isDisposed, this);
             var textWriter = _outWriter ?? _outWriterMethodInfo?.Invoke(null, null) as TextWriter;
             if (textWriter is { })
             {
@@ -84,6 +90,7 @@ public sealed class TestContextWriters : ITestContextWriters
     {
         get
         {
+            ObjectDisposedException.ThrowIf(_isDisposed, this);
             var textWriter = _progressWriter ?? _progressWriterMethodInfo?.GetValue(null) as TextWriter;
             if (textWriter is { })
             {
