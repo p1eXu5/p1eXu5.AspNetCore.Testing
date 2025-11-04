@@ -1,3 +1,8 @@
+1.5.1 Release (2025-11-04)
+
+  - fix (adjust) NUnitSink to emit all logs
+  - set LogOut.All as default
+
 1.5.0 Release (2025-11-04)
 
   - removed net7.0

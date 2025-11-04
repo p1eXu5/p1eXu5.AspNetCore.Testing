@@ -63,7 +63,7 @@ public static class NUnitLoggerConfigurationExtensions
         this LoggerSinkConfiguration sinkConfiguration,
         string testContextAssemblyName = "nunit.framework",
         string testContextTypeName = "TestContext",
-        LogOut logOut = LogOut.Progress,
+        LogOut logOut = LogOut.All,
         LogEventLevel restrictedToMinimumLevel = LevelAlias.Minimum,
         IFormatProvider? formatProvider = null,
         LoggingLevelSwitch? levelSwitch = null,
@@ -111,7 +111,7 @@ public static class NUnitLoggerConfigurationExtensions
     public static LoggerConfiguration NUnit(
         this LoggerSinkConfiguration sinkConfiguration,
         ITestContextWriters testContextWriters,
-        LogOut logOut = LogOut.Progress,
+        LogOut logOut = LogOut.All,
         LogEventLevel restrictedToMinimumLevel = LevelAlias.Minimum,
         IFormatProvider? formatProvider = null,
         LoggingLevelSwitch? levelSwitch = null,
